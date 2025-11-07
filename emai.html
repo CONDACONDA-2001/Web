@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>询价与报价单</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71, #3498db);
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .form-container {
+            padding: 35px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eaeef2;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #3498db;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #dce4ec;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #fafbfc;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            background-color: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 25px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn i {
+            margin-right: 8px;
+        }
+
+        .quote-template {
+            background: linear-gradient(to bottom, #f8fafc, #f0f5f9);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .quote-item {
+            margin-bottom: 18px;
+        }
+
+        .quote-item label {
+            color: #2c3e50;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eaeef2;
+            margin-top: 10px;
+            background: #f8fafc;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .info-box {
+            background: #e8f4fc;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-box i {
+            color: #3498db;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>询价与报价单</h1>
+        </header>
+
+        <div class="form-container">
+            <form id="quoteForm">
+                <!-- 询价部分 -->
+                <div class="section">
+                    <h2><i class="fas fa-question-circle"></i> 询价信息</h2>
+
+                    <div class="form-group">
+                        <label for="item" class="required">所需物品</label>
+                        <input type="text" id="item" name="item" placeholder="请输入您需要的物品名称" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price" class="required">期望价格</label>
+                        <input type="number" id="price" name="price" placeholder="请输入您的预算价格" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">其他说明</label>
+                        <textarea id="description" name="description" placeholder="请提供更多关于您需求的详细信息，如规格、数量、交付时间等"></textarea>
+                    </div>
+                </div>
+
+                <!-- 报价部分 -->
+                <div class="section">
+                    <h2><i class="fas fa-file-invoice-dollar"></i> 报价信息</h2>
+                    <div class="quote-template">
+                        <div class="form-group quote-item">
+                            <label for="quotePrice" class="required">报价价格</label>
+                            <input type="number" id="quotePrice" name="quotePrice" placeholder="请输入报价金额" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group quote-item">
+                                <label for="contactPerson" class="required">联系人</label>
+                                <input type="text" id="contactPerson" name="contactPerson" placeholder="请输入联系人姓名" required>
+                            </div>
+
+                            <div class="form-group quote-item">
+                                <label for="contactPhone" class="required">联系电话</label>
+                                <input type="tel" id="contactPhone" name="contactPhone" placeholder="请输入联系电话" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group quote-item">
+                            <label for="company" class="required">企业名称</label>
+                            <input type="text" id="company" name="company" placeholder="请输入企业名称" required>
+                        </div>
+
+                        <div class="form-group quote-item">
+                            <label for="additionalInfo">其他补充</label>
+                            <textarea id="additionalInfo" name="additionalInfo" placeholder="请提供其他补充信息，如付款方式、交货条件等"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> 提交询价与报价单</button>
+            </form>
+        </div>
+
+        <footer>
+            <p>© 2023 询价报价系统 | 本表单数据将提交至数据库保存</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 表单验证
+            const requiredFields = document.querySelectorAll('input[required], textarea[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#e74c3c';
+                    field.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.15)';
+                } else {
+                    field.style.borderColor = '#dce4ec';
+                    field.style.boxShadow = 'none';
+                }
+            });
+
+            if (isValid) {
+                // 模拟提交到数据库
+                const submitBtn = document.querySelector('.submit-btn');
+                const originalText = submitBtn.innerHTML;
+
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+                submitBtn.disabled = true;
+
+                setTimeout(() => {
+                    alert('表单提交成功！数据已准备发送到数据库。');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+
+                    // 在实际应用中，这里应该使用AJAX或Fetch API将数据发送到后端
+                    // 示例代码：
+                    /*
+                    const formData = new FormData(this);
+
+                    fetch('/submit_quote', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('提交成功！');
+                            this.reset();
+                        } else {
+                            alert('提交失败，请重试。');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('提交失败，请重试。');
+                    });
+                    */
+
+                    // 重置表单
+                    this.reset();
+                }, 1500);
+            } else {
+                alert('请填写所有必填字段！');
+            }
+        });
+
+        // 添加输入框获取焦点时的效果
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#3498db';
+                this.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.15)';
+                this.style.backgroundColor = 'white';
+            });
+
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.style.borderColor = '#dce4ec';
+                    this.style.boxShadow = 'none';
+                    this.style.backgroundColor = '#fafbfc';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
