@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报价单系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71, #3498db);
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .form-container {
+            padding: 35px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eaeef2;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #3498db;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #dce4ec;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #fafbfc;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            background-color: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 25px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn i {
+            margin-right: 8px;
+        }
+
+        .quote-template {
+            background: linear-gradient(to bottom, #f8fafc, #f0f5f9);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .quote-item {
+            margin-bottom: 18px;
+        }
+
+        .quote-item label {
+            color: #2c3e50;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eaeef2;
+            margin-top: 10px;
+            background: #f8fafc;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .info-box {
+            background: #e8f4fc;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-box i {
+            color: #3498db;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .success-message i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .submission-time {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #c3e6cb;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .error-message i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .timestamp-section {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #6c757d;
+        }
+
+        .timestamp-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .timestamp-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .timestamp-label {
+            font-weight: 600;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+
+        .timestamp-label i {
+            margin-right: 8px;
+            color: #6c757d;
+        }
+
+        .timestamp-value {
+            font-weight: 500;
+            color: #495057;
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .timestamp-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .timestamp-value {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>报价单系统</h1>
+            <p class="subtitle">请填写报价信息，完成后提交</p>
+        </header>
+
+        <div class="form-container">
+            <form id="quoteForm">
+                <!-- 报价部分 -->
+                <div class="section">
+                    <h2><i class="fas fa-file-invoice-dollar"></i> 报价信息</h2>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <p>请填写完整报价信息，完成后提交</p>
+                    </div>
+
+                    <div class="quote-template">
+                        <div class="form-group quote-item">
+                            <label for="product" class="required">产品名称</label>
+                            <input type="text" id="product" name="product" placeholder="请输入产品名称" required class="quote-field">
+                        </div>
+
+                        <div class="form-group quote-item">
+                            <label for="quotePrice" class="required">报价价格</label>
+                            <input type="number" id="quotePrice" name="quotePrice" placeholder="请输入报价金额" required class="quote-field">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group quote-item">
+                                <label for="quantity" class="required">数量</label>
+                                <input type="number" id="quantity" name="quantity" placeholder="请输入产品数量" required class="quote-field">
+                            </div>
+
+                            <div class="form-group quote-item">
+                                <label for="unit" class="required">单位</label>
+                                <select id="unit" name="unit" required class="quote-field">
+                                    <option value="">请选择单位</option>
+                                    <option value="个">个</option>
+                                    <option value="件">件</option>
+                                    <option value="套">套</option>
+                                    <option value="台">台</option>
+                                    <option value="千克">千克</option>
+                                    <option value="米">米</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group quote-item">
+                                <label for="contactPerson" class="required">联系人</label>
+                                <input type="text" id="contactPerson" name="contactPerson" placeholder="请输入联系人姓名" required class="quote-field">
+                            </div>
+
+                            <div class="form-group quote-item">
+                                <label for="contactPhone" class="required">联系电话</label>
+                                <input type="tel" id="contactPhone" name="contactPhone" placeholder="请输入联系电话" required class="quote-field">
+                            </div>
+                        </div>
+
+                        <div class="form-group quote-item">
+                            <label for="company" class="required">企业名称</label>
+                            <input type="text" id="company" name="company" placeholder="请输入企业名称" required class="quote-field">
+                        </div>
+
+                        <div class="form-group quote-item">
+                            <label for="additionalInfo">其他补充</label>
+                            <textarea id="additionalInfo" name="additionalInfo" placeholder="请提供其他补充信息，如付款方式、交货条件等" class="quote-field"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 时间戳部分 -->
+                    <div class="timestamp-section">
+                        <div class="timestamp-row">
+                            <div class="timestamp-label">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>提交时间</span>
+                            </div>
+                            <div class="timestamp-value" id="submitTimeValue">尚未提交</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> 提交报价单</button>
+
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>提交成功！</strong> 您的报价单已成功提交。
+                    </div>
+                    <div class="submission-time" id="submissionTime"></div>
+                </div>
+
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>提交失败！</strong> <span id="errorText">请检查网络连接后重试。</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <footer>
+            <p>© 2023 报价单系统 | 本表单数据将提交至服务器保存</p>
+        </footer>
+    </div>
+
+    <script>
+    function getCurrentTime() {
+        const now = new Date();
+        return now.toISOString().slice(0, 19).replace('T', ' ');
+    }
+
+    document.getElementById('quoteForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = {
+            product: document.getElementById('product').value,
+            quotePrice: document.getElementById('quotePrice').value,
+            quantity: document.getElementById('quantity').value,
+            unit: document.getElementById('unit').value,
+            contactPerson: document.getElementById('contactPerson').value,
+            contactPhone: document.getElementById('contactPhone').value,
+            company: document.getElementById('company').value,
+            additionalInfo: document.getElementById('additionalInfo').value,
+            submitTime: getCurrentTime()
+        };
+
+        const submitBtn = document.querySelector('.submit-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('https://send_email.winwinz.us.kg/send_quota', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) throw new Error(`服务器返回错误: ${response.status}`);
+            const resData = await response.json();
+            console.log("服务器响应:", resData);
+
+            // 显示成功信息
+            document.getElementById('submitTimeValue').textContent = formData.submitTime;
+            document.getElementById('submissionTime').textContent = `提交时间: ${formData.submitTime}`;
+            document.getElementById('successMessage').style.display = 'flex';
+            this.reset();
+        } catch (error) {
+            console.error("提交失败:", error);
+            document.getElementById('errorText').textContent = error.message;
+            document.getElementById('errorMessage').style.display = 'flex';
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
